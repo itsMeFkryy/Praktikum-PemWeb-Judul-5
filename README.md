@@ -3,8 +3,8 @@
 ## Nama : Alfikri Deo Putra
 ## NPM  : 2315061075
 
-## Fitur
-Operasi Matematika
+# Fitur
+## Operasi Matematika
 - Operasi dasar: Penambahan, pengurangan, perkalian, pembagian
 - Angka desimal: Mendukung penggunaan titik desimal
 - Perhitungan berantai: Dapat melanjutkan perhitungan dari hasil sebelumnya
