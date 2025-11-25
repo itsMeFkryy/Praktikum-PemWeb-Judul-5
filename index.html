@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kalkulator Interaktif</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .calculator-container {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+        
+        .display-area {
+            background: rgba(0, 0, 0, 0.3);
+        }
+        
+        .btn {
+            transition: all 0.2s ease;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+        
+        .btn:active {
+            transform: translateY(0);
+        }
+        
+        .btn-number {
+            background: rgba(255, 255, 255, 0.15);
+        }
+        
+        .btn-number:hover {
+            background: rgba(255, 255, 255, 0.25);
+        }
+        
+        .btn-operator {
+            background: #6C63FF;
+        }
+        
+        .btn-operator:hover {
+            background: #5A52D5;
+        }
+        
+        .btn-clear {
+            background: #F56565;
+        }
+        
+        .btn-clear:hover {
+            background: #E53E3E;
+        }
+        
+        .btn-equals {
+            background: #48BB78;
+        }
+        
+        .btn-equals:hover {
+            background: #38A169;
+        }
+        
+        .btn-memory {
+            background: rgba(108, 99, 255, 0.3);
+        }
+        
+        .btn-memory:hover {
+            background: rgba(108, 99, 255, 0.5);
+        }
+        
+        .history-section {
+            background: rgba(255, 255, 255, 0.1);
+        }
+        
+        .history-list {
+            max-height: 150px;
+            overflow-y: auto;
+        }
+        
+        .history-list::-webkit-scrollbar {
+            width: 6px;
+        }
+        
+        .history-list::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.1);
+        }
+        
+        .history-list::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 3px;
+        }
+    </style>
+</head>
+<body class="min-h-screen bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center p-4">
+    <div class="calculator-container w-full max-w-md rounded-3xl border border-white/15 overflow-hidden">
+        <div class="px-6 py-4 border-b border-white/15 bg-gradient-to-r from-white/15 to-white/5">
+            <h1 class="text-2xl font-bold text-white text-center flex items-center justify-center gap-2">
+                <i class="fas fa-calculator"></i>
+                Kalkulator
+            </h1>
+        </div>
+        
+        <div class="p-6">
+            <div class="display-area rounded-2xl p-5 mb-4 relative min-h-[120px] flex flex-col justify-end">
+                <div class="history-preview text-white/70 text-sm text-right mb-2 min-h-[20px]" id="historyPreview"></div>
+                <div class="display text-white text-4xl font-light text-right min-h-[50px] break-words" id="display">0</div>
+            </div>
+            
+            <div class="memory-buttons grid grid-cols-4 gap-3 mb-4">
+                <button class="btn btn-memory py-3 rounded-xl text-white text-sm font-medium flex items-center justify-center gap-1" id="mc">
+                    <i class="fas fa-trash text-xs"></i> MC
+                </button>
+                <button class="btn btn-memory py-3 rounded-xl text-white text-sm font-medium flex items-center justify-center gap-1" id="mr">
+                    <i class="fas fa-redo text-xs"></i> MR
+                </button>
+                <button class="btn btn-memory py-3 rounded-xl text-white text-sm font-medium flex items-center justify-center gap-1" id="m-plus">
+                    <i class="fas fa-plus text-xs"></i> M
+                </button>
+                <button class="btn btn-memory py-3 rounded-xl text-white text-sm font-medium flex items-center justify-center gap-1" id="m-minus">
+                    <i class="fas fa-minus text-xs"></i> M
+                </button>
+            </div>
+
+            <div class="buttons-grid grid grid-cols-4 gap-3 mb-6">
+                <button class="btn btn-clear py-5 rounded-2xl text-white text-xl font-semibold flex items-center justify-center gap-2" id="clear">
+                    <i class="fas fa-broom"></i> C
+                </button>
+                <button class="btn btn-clear py-5 rounded-2xl text-white text-xl font-semibold flex items-center justify-center gap-2" id="clear-entry">
+                    <i class="fas fa-eraser"></i> CE
+                </button>
+                <button class="btn btn-operator py-5 rounded-2xl text-white text-xl font-semibold flex items-center justify-center" data-operation="÷">
+                    <i class="fas fa-divide"></i>
+                </button>
+                <button class="btn btn-operator py-5 rounded-2xl text-white text-xl font-semibold flex items-center justify-center" data-operation="×">
+                    <i class="fas fa-times"></i>
+                </button>
+
+                <button class="btn btn-number py-5 rounded-2xl text-white text-xl font-semibold" data-number="7">7</button>
+                <button class="btn btn-number py-5 rounded-2xl text-white text-xl font-semibold" data-number="8">8</button>
+                <button class="btn btn-number py-5 rounded-2xl text-white text-xl font-semibold" data-number="9">9</button>
+                <button class="btn btn-operator py-5 rounded-2xl text-white text-xl font-semibold flex items-center justify-center" data-operation="-">
+                    <i class="fas fa-minus"></i>
+                </button>
+
+                <button class="btn btn-number py-5 rounded-2xl text-white text-xl font-semibold" data-number="4">4</button>
+                <button class="btn btn-number py-5 rounded-2xl text-white text-xl font-semibold" data-number="5">5</button>
+                <button class="btn btn-number py-5 rounded-2xl text-white text-xl font-semibold" data-number="6">6</button>
+                <button class="btn btn-operator py-5 rounded-2xl text-white text-xl font-semibold flex items-center justify-center" data-operation="+">
+                    <i class="fas fa-plus"></i>
+                </button>
+
+                <button class="btn btn-number py-5 rounded-2xl text-white text-xl font-semibold" data-number="1">1</button>
+                <button class="btn btn-number py-5 rounded-2xl text-white text-xl font-semibold" data-number="2">2</button>
+                <button class="btn btn-number py-5 rounded-2xl text-white text-xl font-semibold" data-number="3">3</button>
+                <button class="btn btn-equals py-5 rounded-2xl text-white text-xl font-semibold flex items-center justify-center row-span-2" id="equals">
+                    <i class="fas fa-equals"></i>
+                </button>
+
+                <button class="btn btn-number py-5 rounded-2xl text-white text-xl font-semibold col-span-2" data-number="0">0</button>
+                <button class="btn btn-number py-5 rounded-2xl text-white text-xl font-semibold" id="decimal">.</button>
+            </div>
+
+            <div class="history-section rounded-2xl overflow-hidden">
+                <div class="px-5 py-4 bg-black/10 border-b border-white/15 flex justify-between items-center">
+                    <h3 class="text-white font-semibold flex items-center gap-2">
+                        <i class="fas fa-history"></i>
+                        Riwayat Perhitungan
+                    </h3>
+                    <button class="btn-clear-history p-2 rounded-lg text-red-400 hover:bg-white/10 transition-colors" id="clearHistory">
+                        <i class="fas fa-trash-alt"></i>
+                    </button>
+                </div>
+                <div class="history-list p-4" id="historyList">
+                    <div class="history-empty text-center text-white/50 py-8">
+                        <i class="fas fa-clock text-3xl mb-2 block opacity-50"></i>
+                        <p>Belum ada riwayat</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
